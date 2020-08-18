@@ -1,7 +1,7 @@
 ---
 - include: 01_pre.yml
 - include: 02_firewall.yml
-# - include: 03_disablenet.yml
+- include: 03_disablenet.yml
 - include: 04_disablefs.yml
 # - include: 05_systemdconf.yml
 # - include: 06_journalconf.yml
