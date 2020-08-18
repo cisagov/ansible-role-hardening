@@ -12,8 +12,8 @@
 # - include: 11_hosts.yml
 # - include: 12_logindefs.yml
 # - include: 13_sysctl.yml
-# - include: 14_limits.yml
-# - include: 15_adduser.yml
+- include: 14_limits.yml
+- include: 15_adduser.yml
 # - include: 16_rootaccess.yml
 # - include: 17_packages.yml
 # - include: 18_sshdconfig.yml
