@@ -18,7 +18,7 @@
 # - include: 17_packages.yml
 # - include: 18_sshdconfig.yml
 # - include: 19_password.yml
-# - include: 20_cron.yml
+- include: 20_cron.yml
 # - include: 21_ctrlaltdel.yml
 # - include: 22_auditd.yml
 # - include: 23_disablemod.yml
