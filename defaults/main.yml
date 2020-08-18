@@ -12,7 +12,6 @@ fs_modules_blocklist:
   - jffs2
   - squashfs
   - udf
-  - vfat
 grub_audit_backlog_cmdline: "audit_backlog_limit=8192"
 grub_audit_cmdline: "audit=1"
 limit_nofile_hard: 1024
