@@ -36,8 +36,19 @@
     name: "ufw"
     state: present
     install_recommends: 'no'
+  when: ansible_os_family == "Debian"
   tags:
     - apt
+    - packages
+    - ufw
+
+- name: ufw installation
+  become: 'yes'
+  dnf:
+    name: "ufw"
+  when: ansible_os_family == "RedHat"
+  tags:
+    - dnf
     - packages
     - ufw
 
