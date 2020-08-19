@@ -65,19 +65,6 @@
   tags:
     - ufw
 
-- name: allow ssh ufw
-  become: 'yes'
-  ufw:
-    rule: allow
-    src: "{{ item }}"
-    port: "{{ sshd_port|int }}"
-    proto: tcp
-  with_items:
-    - "{{ sshd_admin_net }}"
-  tags:
-    - ufw
-    - ssh
-
 # https://github.com/ansible/ansible/issues/45446
 - name: enable ufw and set default deny incoming
   become: 'yes'
