@@ -65,13 +65,6 @@
   tags:
     - ufw
 
-- name: reset ufw
-  become: 'yes'
-  ufw:
-    state: reset
-  tags:
-    - ufw
-
 - name: allow ssh ufw
   become: 'yes'
   ufw:
