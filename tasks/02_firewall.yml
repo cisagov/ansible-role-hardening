@@ -17,6 +17,7 @@
     - conntrack
     - sysctl
 
+# https://github.com/ansible/ansible/issues/45446
 - name: enable nf_conntrack_tcp_be_liberal to keep connections alive
   become: 'yes'
   sysctl:
