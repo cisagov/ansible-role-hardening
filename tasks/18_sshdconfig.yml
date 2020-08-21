@@ -1,16 +1,43 @@
 ---
-- name: sshd_config
+- name: set permissions on /etc/ssh/sshd_config
   become: 'yes'
-  template:
-    src: etc/ssh/sshd_config.j2
-    dest: /etc/ssh/sshd_config
-    backup: 'yes'
+  file:
+    path: /etc/ssh/sshd_config
     mode: 0600
     owner: root
     group: root
-  notify:
-    - restart sshd
+    state: touch
   tags:
     - sshd_config
     - sshd
+
+- name: set ssh configuration items
+  become: 'yes'
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "(?i)[^\\s #]*{{ item.name }}"
+    line: "{{ item.name }} {{ item.value }}"
+    state: present
+  tags:
+    - sshd_config
+    - sshd
+  loop:
+    - { name: "AllowTcpForwarding", value: "no"}
+    - { name: "ClientAliveCountMax", value: "0"}
+    - { name: "ClientAliveInterval", value: "300"}
+    - { name: "HostbasedAuthentication", value: "no"}
+    - { name: "IgnoreRhosts", value: "yes"}
+    - { name: "LogLevel", value: "{{ sshd_log_level }}"}
+    - { name: "LoginGraceTime", value: "20"}
+    - { name: "MaxAuthTries", value: "{{ sshd_max_auth_tries }}"}
+    - { name: "MaxSessions", value: "10"}
+    - { name: "MaxStartups", value: "10:30:60"}
+    - { name: "PermitEmptyPasswords", value: "no"}
+    - { name: "PermitRootLogin", value: "no"}
+    - { name: "PermitUserEnvironment", value: "no"}
+    - { name: "Protocol", value: "2"}
+    - { name: "UsePAM", value: "yes"}
+    - { name: "X11Forwarding", value: "no"}
+  notify:
+    - restart sshd
 ...
