@@ -1,10 +1,15 @@
 ---
-# The hardening Nessus compliance scan uses nmcli to test
-- name: Install network-manager on Debian
-  become: yes
-  package:
-    name:
-      - network-manager
+# The hardening Nessus compliance scan uses nmcli to test on Debian
+- name: Network-manager tasks on Debian
+  block:
+    - name: Install network-manager on Debian
+      become: yes
+      package:
+        name:
+          - network-manager
+    - name: Turn off wireless interfaces on Debian
+      become: yes
+      command: nmcli radio all off
   when:
     - ansible_os_family == "Debian"
 
