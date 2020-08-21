@@ -164,40 +164,143 @@
     label: "{{ item.path }}"
   tags:
     - umask
-  
-- name: readonly TMOUT
-  become: 'yes'
-  lineinfile:
-    line: "readonly TMOUT"
-    dest: /etc/profile
-    mode: 0644
-    state: present
-    create: 'no'
-    insertbefore: "^export"
+
+- name: Set TMOUT in /etc/profile
+  become: yes
+  block:
+    - name: readonly TMOUT
+      lineinfile:
+        line: "readonly TMOUT"
+        dest: /etc/profile
+        mode: 0644
+        state: present
+        create: no
+        insertbefore: "^export"
+
+    - name: set TMOUT
+      lineinfile:
+        line: "TMOUT=900"
+        dest: /etc/profile
+        mode: 0644
+        state: present
+        create: no
+        insertbefore: "^readonly TMOUT"
+
+    - name: export TMOUT
+      lineinfile:
+        line: "export TMOUT"
+        dest: /etc/profile
+        mode: 0644
+        state: present
+        create: no
+        insertafter: "^readonly TMOUT"
   tags:
     - tmout
 
-- name: set TMOUT
-  become: 'yes'
-  lineinfile:
-    line: "TMOUT=900"
-    dest: /etc/profile
-    mode: 0644
-    state: present
-    create: 'no'
-    insertbefore: "^readonly TMOUT"
+- name: Set TMOUT in bashrc
+  become: yes
+  block:
+    - name: readonly TMOUT
+      lineinfile:
+        line: "readonly TMOUT"
+        dest: /etc/bashrc
+        mode: 0644
+        state: present
+        create: no
+        insertbefore: "^export"
+
+    - name: set TMOUT
+      lineinfile:
+        line: "TMOUT=900"
+        dest: /etc/bashrc
+        mode: 0644
+        state: present
+        create: no
+        insertbefore: "^readonly TMOUT"
+
+    - name: export TMOUT
+      lineinfile:
+        line: "export TMOUT"
+        dest: /etc/bashrc
+        mode: 0644
+        state: present
+        create: no
+        insertafter: "^readonly TMOUT"
+  when: bashrc.stat.exists
   tags:
     - tmout
 
-- name: export TMOUT
-  become: 'yes'
-  lineinfile:
-    line: "export TMOUT"
-    dest: /etc/profile
-    mode: 0644
-    state: present
-    create: 'no'
-    insertafter: "^readonly TMOUT"
+- name: Set TMOUT in bash.bashrc
+  become: yes
+  block:
+    - name: readonly TMOUT
+      lineinfile:
+        line: "readonly TMOUT"
+        dest: /etc/bash.bashrc
+        mode: 0644
+        state: present
+        create: no
+        insertbefore: "^export"
+
+    - name: set TMOUT
+      lineinfile:
+        line: "TMOUT=900"
+        dest: /etc/bash.bashrc
+        mode: 0644
+        state: present
+        create: no
+        insertbefore: "^readonly TMOUT"
+
+    - name: export TMOUT
+      lineinfile:
+        line: "export TMOUT"
+        dest: /etc/bash.bashrc
+        mode: 0644
+        state: present
+        create: no
+        insertafter: "^readonly TMOUT"
+  when: bash_bashrc.stat.exists
+  tags:
+    - tmout
+
+- name: Set TMOUT for each file in /etc/profile.d
+  become: yes
+  block:
+    - name: readonly TMOUT
+      lineinfile:
+        line: "readonly TMOUT"
+        dest: "{{ item.path }}"
+        mode: 0644
+        state: present
+        create: no
+        insertbefore: "^export"
+      loop: "{{ find_profiled_result.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+
+    - name: set TMOUT
+      lineinfile:
+        line: "TMOUT=900"
+        dest: "{{ item.path }}"
+        mode: 0644
+        state: present
+        create: no
+        insertbefore: "^readonly TMOUT"
+      loop: "{{ find_profiled_result.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+
+    - name: export TMOUT
+      lineinfile:
+        line: "export TMOUT"
+        dest: "{{ item.path }}"
+        mode: 0644
+        state: present
+        create: no
+        insertafter: "^readonly TMOUT"
+      loop: "{{ find_profiled_result.files }}"
+      loop_control:
+        label: "{{ item.path }}"
   tags:
     - tmout
 ...
