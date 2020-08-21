@@ -1,4 +1,13 @@
 ---
+# The hardening Nessus compliance scan uses nmcli to test
+- name: Install network-manager on Debian
+  become: yes
+  package:
+    name:
+      - network-manager
+  when:
+    - ansible_os_family == "Debian"
+
 - name: disable misc kernel modules
   become: 'yes'
   lineinfile:
