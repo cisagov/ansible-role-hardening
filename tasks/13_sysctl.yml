@@ -1,15 +1,26 @@
 ---
-- name: sysctl
-  become: 'yes'
-  template:
-    src: etc/sysctl.conf.j2
-    dest: /etc/sysctl.conf
-    backup: 'yes'
-    mode: 0600
-    owner: root
-    group: root
+- name: Ensure core dumps are restricted
+  become: yes
+  sysctl:
+    name: fs.suid_dumpable
+    value: '0'
+    sysctl_set: yes
   notify:
     - restart sysctl
   tags:
     - sysctl
+
+# - name: sysctl
+#   become: 'yes'
+#   template:
+#     src: etc/sysctl.conf.j2
+#     dest: /etc/sysctl.conf
+#     backup: 'yes'
+#     mode: 0600
+#     owner: root
+#     group: root
+#   notify:
+#     - restart sysctl
+#   tags:
+#     - sysctl
 ...
