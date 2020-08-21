@@ -390,4 +390,5 @@ suid_sgid_blocklist:
   - /usr/sbin/start-stop-daemon
   - /usr/sbin/sysctl
   - /usr/sbin/tcpdump
+umask_value: "027"
 ...

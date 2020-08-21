@@ -9,9 +9,20 @@
   become: 'yes'
   replace:
     regexp: 'umask(\s+.*)'
-    replace: "umask 022"
+    replace: "umask {{ umask_value }}"
     dest: /etc/init.d/rc
     mode: 0755
+  when: initdrc.stat.exists
+  tags:
+    - umask
+
+- name: Ensure that a umask line appears in rc
+  become: yes
+  lineinfile:
+    line: "umask {{ umask_value }}"
+    mode: 0644
+    path: /etc/rc
+    regexp: 'umask(\s+.*)'
   when: initdrc.stat.exists
   tags:
     - umask
@@ -26,10 +37,49 @@
   become: 'yes'
   replace:
     regexp: 'umask(\s+.*)'
-    replace: "umask 022"
+    replace: "umask {{ umask_value }}"
     dest: /etc/bashrc
     mode: 0644
   when: bashrc.stat.exists
+  tags:
+    - umask
+
+- name: Ensure that a umask line appears in bashrc
+  become: yes
+  lineinfile:
+    line: "umask {{ umask_value }}"
+    mode: 0644
+    path: /etc/bashrc
+    regexp: 'umask(\s+.*)'
+  when: bashrc.stat.exists
+  tags:
+    - umask
+
+- name: stat bash.bashrc
+  become: 'yes'
+  stat:
+    path: /etc/bash.bashrc
+  register: bash_bashrc
+
+- name: set default bash.bashrc umask
+  become: 'yes'
+  replace:
+    regexp: 'umask(\s+.*)'
+    replace: "umask {{ umask_value }}"
+    dest: /etc/bash.bashrc
+    mode: 0644
+  when: bash_bashrc.stat.exists
+  tags:
+    - umask
+
+- name: Ensure that a umask line appears in bash.bashrc
+  become: yes
+  lineinfile:
+    line: "umask {{ umask_value }}"
+    mode: 0644
+    path: /etc/bash.bashrc
+    regexp: 'umask(\s+.*)'
+  when: bash_bashrc.stat.exists
   tags:
     - umask
 
@@ -43,9 +93,20 @@
   become: 'yes'
   replace:
     regexp: 'umask(\s+.*)'
-    replace: "umask 022"
+    replace: "umask {{ umask_value }}"
     dest: /etc/csh.cshrc
     mode: 0644
+  when: cshrc.stat.exists
+  tags:
+    - umask
+
+- name: Ensure that a umask line appears in csh.cshrc
+  become: yes
+  lineinfile:
+    line: "umask {{ umask_value }}"
+    mode: 0644
+    path: /etc/csh.cshrc
+    regexp: 'umask(\s+.*)'
   when: cshrc.stat.exists
   tags:
     - umask
@@ -54,12 +115,56 @@
   become: 'yes'
   replace:
     regexp: 'umask(\s+.*)'
-    replace: "umask 022"
+    replace: "umask {{ umask_value }}"
     dest: /etc/profile
     mode: 0644
   tags:
     - umask
 
+- name: Ensure that a umask line appears in profile
+  become: yes
+  lineinfile:
+    line: "umask {{ umask_value }}"
+    mode: 0644
+    path: /etc/profile
+    regexp: 'umask(\s+.*)'
+  tags:
+    - umask
+
+- name: Find all files in /etc/profile.d
+  find:
+    paths:
+      - /etc/profile.d
+    patterns:
+      - "*"
+  register: find_profiled_result
+
+- name: set default profile umask for each file in /etc/profile.d
+  become: 'yes'
+  replace:
+    regexp: 'umask(\s+.*)'
+    replace: "umask {{ umask_value }}"
+    dest: "{{ item.path }}"
+    mode: 0644
+  loop: "{{ find_profiled_result.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  tags:
+    - umask
+
+- name: Ensure that a umask line appears in each file in /etc/profile.d
+  become: yes
+  lineinfile:
+    line: "umask {{ umask_value }}"
+    mode: 0644
+    path: "{{ item.path }}"
+    regexp: 'umask(\s+.*)'
+  loop: "{{ find_profiled_result.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  tags:
+    - umask
+  
 - name: readonly TMOUT
   become: 'yes'
   lineinfile:
