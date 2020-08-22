@@ -3,7 +3,7 @@
   become: yes
   sysctl:
     name: fs.suid_dumpable
-    value: '0'
+    value: "0"
     sysctl_set: yes
   notify:
     - restart sysctl
