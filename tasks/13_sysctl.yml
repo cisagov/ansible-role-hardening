@@ -10,17 +10,108 @@
   tags:
     - sysctl
 
-# - name: sysctl
-#   become: 'yes'
-#   template:
-#     src: etc/sysctl.conf.j2
-#     dest: /etc/sysctl.conf
-#     backup: 'yes'
-#     mode: 0600
-#     owner: root
-#     group: root
-#   notify:
-#     - restart sysctl
-#   tags:
-#     - sysctl
+- name: Ensure ICMP redirects are not accepted
+  become: yes
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  loop:
+    - { name: "net.ipv4.conf.all.accept_redirects", value: "0"}
+    - { name: "net.ipv4.conf.default.accept_redirects", value: "0"}
+    - { name: "net.ipv6.conf.all.accept_redirects", value: "0"}
+    - { name: "net.ipv6.conf.default.accept_redirects", value: "0"}
+  notify:
+    - restart sysctl
+
+- name: Ensure secure ICMP redirects are not accepted
+  become: yes
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  loop:
+    - { name: "net.ipv4.conf.all.secure_redirects", value: "0"}
+    - { name: "net.ipv4.conf.default.secure_redirects", value: "0"}
+  notify:
+    - restart sysctl
+
+- name: Ensure suspicious packets are logged
+  become: yes
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  loop:
+    - { name: "net.ipv4.conf.all.log_martians", value: "1"}
+    - { name: "net.ipv4.conf.default.log_martians", value: "1"}
+  notify:
+    - restart sysctl
+
+- name: Ensure broadcast ICMP requests are ignored
+  become: yes
+  sysctl:
+    name: net.ipv4.icmp_echo_ignore_broadcasts
+    value: "1"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  notify:
+    - restart sysctl
+
+- name: Ensure bogus ICMP responses are ignored
+  become: yes
+  sysctl:
+    name: net.ipv4.icmp_ignore_bogus_error_responses
+    value: "1"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  notify:
+    - restart sysctl
+
+- name: Ensure Reverse Path Filtering is enabled
+  become: yes
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  loop:
+    - { name: "net.ipv4.conf.all.rp_filter", value: "1"}
+    - { name: "net.ipv4.conf.default.rp_filter", value: "1"}
+  notify:
+    - restart sysctl
+
+- name: Ensure TCP SYN Cookies is enabled
+  become: yes
+  sysctl:
+    name: net.ipv4.tcp_syncookies
+    value: "1"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  notify:
+    - restart sysctl
+
+- name: Ensure IPv6 router advertisements are not accepted
+  become: yes
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  loop:
+    - { name: "net.ipv6.conf.all.accept_ra", value: "0"}
+    - { name: "net.ipv6.conf.default.accept_ra", value: "0"}
+  notify:
+    - restart sysctl
 ...
