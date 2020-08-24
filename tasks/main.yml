@@ -6,7 +6,7 @@
 # - include: 05_systemdconf.yml
 # - include: 06_journalconf.yml
 # - include: 07_timesyncd.yml
-# - include: 08_fstab.yml
+- include: 08_fstab.yml
 # - include: 09_prelink.yml
 # - include: 10_pkgupdate.yml
 # - include: 11_hosts.yml
@@ -36,6 +36,6 @@
 # - include: 37_mount.yml
 # - include: 38_postfix.yml
 # - include: 39_motdnews.yml
-# - include: 43_sudo.yml
+- include: 43_sudo.yml
 # - include: 99_extras.yml
 ...
