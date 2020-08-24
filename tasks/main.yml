@@ -37,5 +37,6 @@
 # - include: 38_postfix.yml
 # - include: 39_motdnews.yml
 - include: 43_sudo.yml
+- include: 98_grub.yml
 # - include: 99_extras.yml
 ...
