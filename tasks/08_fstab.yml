@@ -1,32 +1,36 @@
 ---
-- name: create /tmp
-  become: 'yes'
-  template:
-    src: etc/systemd/tmp.mount.j2
-    dest: /lib/systemd/system/tmp.mount
-    backup: 'yes'
+- name: Copy tmp.mount (Debian only)
+  become: yes
+  copy:
+    dest: /lib/systemd/system
     mode: 0644
-    owner: root
-    group: root
+    remote_src: yes
+    src: /usr/share/systemd/tmp.mount
+    validate: /usr/bin/systemd-analyze verify %s
+  when: ansible_os_family == "Debian"
   tags:
     - systemd
     - tmp
 
-- name: remove /tmp from fstab
-  become: 'yes'
+- name: Ensure nodev, noexec, and nosuid are set in the /tmp partition
+  become: yes
   lineinfile:
-    path: /etc/fstab
-    state: absent
-    regexp: '^(.*)tmp(.*)$'
+    line: Options=mode=1777,strictatime,nosuid,nodev,noexec
+    mode: 0644
+    path: /lib/systemd/system/tmp.mount
+    regexp: ^Options=.*
   tags:
-    - fstab
+    - systemd
+    - tmp
 
-- name: remove floppy from fstab
-  become: 'yes'
-  lineinfile:
-    path: /etc/fstab
-    state: absent
-    regexp: '^(.*)floppy(.*)$'
+- name: Enable tmp.mount
+  become: yes
+  systemd:
+    daemon_reload: yes
+    enabled: yes
+    masked: no
+    name: tmp.mount
+    state: started
   tags:
-    - fstab
-...
+    - systemd
+    - tmp
