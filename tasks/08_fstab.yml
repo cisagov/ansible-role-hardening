@@ -36,3 +36,17 @@
   tags:
     - systemd
     - tmp
+
+- name: Harden /dev/shm
+  become: yes
+  block:
+    - name: Create /dev/shm entry in /etc/fstab with noexec option
+      mount:
+        fstype: tmpfs
+        opts: rw,nodev,nosuid,noexec
+        path: /dev/shm
+        src: tmpfs
+        state: mounted
+  tags:
+    - fstab
+    - dev_shm
