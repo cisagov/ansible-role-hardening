@@ -1,36 +1,38 @@
 ---
-- name: Copy tmp.mount (Debian only)
+- name: Harden /tmp
   become: yes
-  copy:
-    dest: /lib/systemd/system
-    mode: 0644
-    remote_src: yes
-    src: /usr/share/systemd/tmp.mount
-    validate: /usr/bin/systemd-analyze verify %s
-  when: ansible_os_family == "Debian"
-  tags:
-    - systemd
-    - tmp
+  block:
+    - name: Copy tmp.mount (Debian only)
+      copy:
+        dest: /etc/systemd/system
+        mode: 0644
+        remote_src: yes
+        src: /usr/share/systemd/tmp.mount
+        validate: /usr/bin/systemd-analyze verify %s
+      when: ansible_os_family == "Debian"
 
-- name: Ensure nodev, noexec, and nosuid are set in the /tmp partition
-  become: yes
-  lineinfile:
-    line: Options=mode=1777,strictatime,nosuid,nodev,noexec
-    mode: 0644
-    path: /lib/systemd/system/tmp.mount
-    regexp: ^Options=.*
-  tags:
-    - systemd
-    - tmp
+    - name: Ensure nodev, noexec, and nosuid are set in the /tmp partition
+      block:
+        - name: Create directory for local options override for /tmp partition
+          file:
+            mode: 0755
+            path: /etc/systemd/system/tmp.mount.d
+            state: directory
+        - name: Create local options override for the /tmp partition
+          copy:
+            content: |
+              [Mount]
+              Options=mode=1777,strictatime,nosuid,nodev,noexec
+            dest: /etc/systemd/system/tmp.mount.d/options.conf
+            mode: 0644
 
-- name: Enable tmp.mount
-  become: yes
-  systemd:
-    daemon_reload: yes
-    enabled: yes
-    masked: no
-    name: tmp.mount
-    state: started
+    - name: Enable and unmask tmp.mount
+      systemd:
+        daemon_reload: yes
+        enabled: yes
+        masked: no
+        name: tmp.mount
+        state: started
   tags:
     - systemd
     - tmp
