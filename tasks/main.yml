@@ -4,7 +4,7 @@
 - include: 03_disablenet.yml
 - include: 04_disablefs.yml
 # - include: 05_systemdconf.yml
-# - include: 06_journalconf.yml
+- include: 06_journalconf.yml
 # - include: 07_timesyncd.yml
 - include: 08_fstab.yml
 # - include: 09_prelink.yml

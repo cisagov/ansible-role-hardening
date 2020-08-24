@@ -1,39 +1,28 @@
 ---
-- name: systemd journald.conf
-  become: 'yes'
-  template:
-    src: etc/systemd/journald.conf.j2
-    dest: /etc/systemd/journald.conf
-    backup: 'yes'
-    mode: 0644
-    owner: root
-    group: root
-  notify:
-    - reload systemd
+- name: Ensure journald is configured securely
+  become: yes
+  lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: "(?i)[^\\s #]*{{ item.name }}="
+    line: "{{ item.name }}={{ item.value }}"
+    state: present
   tags:
     - systemd
     - journald
+  loop:
+    - { name: "Compress", value: "yes"}
+    - { name: "ForwardToSyslog", value: "yes"}
+    - { name: "Storage", value: "persistent"}
+  notify:
+    - reload systemd
 
-- name: logrotate.conf
-  become: 'yes'
-  template:
-    src: etc/logrotate.conf.j2
-    dest: /etc/logrotate.conf
-    backup: 'yes'
-    mode: 0644
-    owner: root
-    group: root
-  tags:
-    - logrotate
-
-- name: cron.daily logrotate
-  become: 'yes'
+- name: Ensure logrotate assigns appropriate permissions
+  become: yes
   lineinfile:
-    line: "/usr/sbin/logrotate /etc/logrotate.conf"
-    dest: /etc/cron.daily/logrotate
-    mode: 0750
+    path: /etc/logrotate.conf
+    regexp: "(?i)[^\\s #]*create"
+    line: "create 0640 root utmp"
     state: present
-    create: 'yes'
   tags:
     - logrotate
 
@@ -45,11 +34,11 @@
   tags:
     - rsyslog
 
-- name: set rsyslog.conf FileCreateMode
+- name: Ensure rsyslog default file permissions configured
   become: 'yes'
   lineinfile:
     regexp: '^\$FileCreateMode'
-    line: '$FileCreateMode 0600'
+    line: '$FileCreateMode 0640'
     dest: /etc/rsyslog.conf
     state: present
     create: 'no'
