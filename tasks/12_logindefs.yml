@@ -1,13 +1,15 @@
 ---
-- name: login.defs
-  become: 'yes'
-  template:
-    src: etc/login.defs.j2
-    dest: /etc/login.defs
-    backup: 'yes'
-    mode: 0644
-    owner: root
-    group: root
+- name: set login.defs configuration items
+  become: "yes"
+  lineinfile:
+    path: /etc/login.defs
+    regexp: "(?i)[^\\s #]*{{ item.name }}"
+    line: "{{ item.name }} {{ item.value }}"
+    state: present
   tags:
     - login.defs
+  loop:
+    - { name: "PASS_MAX_DAYS", value: "365"}
+    - { name: "PASS_MIN_DAYS", value: "7"}
+    - { name: "PASS_WARN_AGE", value: "7"}
 ...
