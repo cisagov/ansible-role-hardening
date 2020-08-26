@@ -1,34 +1,35 @@
 ---
-- name: access.conf
-  become: 'yes'
-  template:
-    src: etc/security/access.conf.j2
-    dest: /etc/security/access.conf
-    backup: 'yes'
-    mode: 0644
-    owner: root
-    group: root
-  tags:
-    - access.conf
+# - name: access.conf
+#   become: 'yes'
+#   template:
+#     src: etc/security/access.conf.j2
+#     dest: /etc/security/access.conf
+#     backup: 'yes'
+#     mode: 0644
+#     owner: root
+#     group: root
+#   tags:
+#     - access.conf
 
 - name: securetty
-  become: 'yes'
+  become: "yes"
   template:
     src: etc/securetty.j2
     dest: /etc/securetty
-    backup: 'yes'
+    backup: "yes"
     mode: 0644
     owner: root
     group: root
   tags:
     - securetty
+  when: ansible_os_family == "Debian"
 
-- name: mask debug-shell
-  become: 'yes'
-  systemd:
-    name: debug-shell.service
-    masked: 'yes'
-  tags:
-    - systemd
-    - debug-shell
+# - name: mask debug-shell
+#   become: 'yes'
+#   systemd:
+#     name: debug-shell.service
+#     masked: 'yes'
+#   tags:
+#     - systemd
+#     - debug-shell
 ...
