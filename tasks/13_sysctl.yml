@@ -114,4 +114,15 @@
     - { name: "net.ipv6.conf.default.accept_ra", value: "0"}
   notify:
     - restart sysctl
+
+- name: Ensure address space layout randomization (ASLR) is enabled
+  become: yes
+  sysctl:
+    name: kernel.randomize_va_space
+    value: "2"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  notify:
+    - restart sysctl
 ...
