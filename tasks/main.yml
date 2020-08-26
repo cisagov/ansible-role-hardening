@@ -30,7 +30,7 @@
 # - include: 31_logindconf.yml
 # - include: 32_resolvedconf.yml
 # - include: 33_rkhunter.yml
-# - include: 34_issue.yml
+- include: 34_issue.yml
 # - include: 35_apport.yml
 # - include: 36_lockroot.yml
 # - include: 37_mount.yml
