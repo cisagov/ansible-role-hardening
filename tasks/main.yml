@@ -25,7 +25,6 @@
 # - include: 24_aide.yml
 # - include: 26_users.yml
 # - include: 27_suid.yml
-- include: 28_umask.yml
 - include: 30_path.yml
 # - include: 31_logindconf.yml
 # - include: 32_resolvedconf.yml
@@ -37,6 +36,7 @@
 # - include: 38_postfix.yml
 # - include: 39_motdnews.yml
 - include: 43_sudo.yml
+- include: 97_umask.yml
 - include: 98_grub.yml
 # - include: 99_extras.yml
 ...
