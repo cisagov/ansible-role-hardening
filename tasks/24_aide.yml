@@ -1,4 +1,10 @@
 ---
+- name: Install AIDE
+  become: yes
+  package:
+    name:
+      - aide
+
 - name: check cron.daily aide
   become: 'yes'
   stat:
@@ -109,14 +115,14 @@
   tags:
     - aide
 
-- name: initialize Debian aide
-  become: 'yes'
+- name: Initialize Debian aide
+  become: yes
   expect:
     command: aideinit
     timeout: null
     responses:
       Question:
-        - 'Overwrite /var/lib/aide/aide.db [yN]?': 'y'
+        - 'Overwrite existing /var/lib/aide/aide.db.new [Yn]?': 'y'
   when: ansible_os_family == "Debian" and not ubuaidedb.stat.exists
   tags:
     - skip_ansible_lint

@@ -22,7 +22,7 @@
 # - include: 21_ctrlaltdel.yml
 # - include: 22_auditd.yml
 - include: 23_disablemod.yml
-# - include: 24_aide.yml
+- include: 24_aide.yml
 # - include: 26_users.yml
 # - include: 27_suid.yml
 - include: 30_path.yml
