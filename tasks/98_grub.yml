@@ -56,3 +56,22 @@
           when: grub2_cfg.stat.exists
   tags:
     - grub
+
+- name: Ensure AppArmor is enabled in the bootloader configuration (Debian)
+  lineinfile:
+    regexp: '^GRUB_CMDLINE_LINUX="(.*)(?<!apparmor=1 security=apparmor)"'
+    line: 'GRUB_CMDLINE_LINUX="\1 apparmor=1 security=apparmor"'
+    dest: /etc/default/grub
+    backrefs: yes
+    state: present
+  register: grub_updated
+  become: yes
+  when: ansible_os_family == "Debian"
+  tags:
+    - apparmor
+    - grub
+
+- name: Update grub
+  command: update-grub
+  become: yes
+  when: grub_updated["changed"]
