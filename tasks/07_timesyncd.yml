@@ -1,16 +1,30 @@
 ---
-- name: timesyncd.conf
-  become: 'yes'
-  template:
-    src: etc/systemd/timesyncd.conf.j2
-    dest: /etc/systemd/timesyncd.conf
-    backup: 'yes'
-    mode: 0644
-    owner: root
-    group: root
-  notify:
-    - reload systemd
+- name: Modify systemd-timesyncd configuration
+  become: yes
+  block:
+    # ansible-lint complains that we have not set the mode for the
+    # replace task, but since we are at most modifying the file in
+    # place it should not be necessary to do so.  Hence the noqa 209
+    # for each of those tasks.
+    - name: >
+        Comment out existing config lines if they do not contain
+        the desired content
+      replace: # noqa 208
+        path: "/etc/systemd/timesyncd.conf"
+        regexp: "{{ item }}"
+        replace: '# \1'
+      loop:
+        - ^(FallbackNTP=(?!169\.254\.169\.123).*)
+        - ^(NTP=(?!169\.254\.169\.123).*)
+        - ^(RootDistanceMaxSec=(?!1).*)
+    - name: Add the desired config lines for Amazon Time Sync Service
+      lineinfile:
+        line: "{{ item }}"
+        path: "/etc/systemd/timesyncd.conf"
+      loop:
+        - FallbackNTP=169.254.169.123
+        - NTP=169.254.169.123
+        - RootDistanceMaxSec=1
   tags:
     - systemd
     - timesyncd
-...
