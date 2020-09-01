@@ -24,6 +24,22 @@
   notify:
     - restart sysctl
 
+- name: Ensure source routed packets are not accepted
+  become: yes
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  loop:
+    - { name: "net.ipv4.conf.all.accept_source_route", value: "0"}
+    - { name: "net.ipv4.conf.default.accept_source_route", value: "0"}
+    - { name: "net.ipv6.conf.all.accept_source_route", value: "0"}
+    - { name: "net.ipv6.conf.default.accept_source_route", value: "0"}
+  notify:
+    - restart sysctl
+
 - name: Ensure ICMP redirects are not accepted
   become: yes
   sysctl:
