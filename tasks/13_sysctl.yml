@@ -10,6 +10,20 @@
   tags:
     - sysctl
 
+- name: Ensure packet redirect sending is disabled
+  become: yes
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  tags:
+    - sysctl
+  loop:
+    - { name: "net.ipv4.conf.all.send_redirects", value: "0"}
+    - { name: "net.ipv4.conf.default.send_redirects", value: "0"}
+  notify:
+    - restart sysctl
+
 - name: Ensure ICMP redirects are not accepted
   become: yes
   sysctl:
