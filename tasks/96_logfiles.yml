@@ -1,0 +1,216 @@
+---
+- name: Set permissions on /var/log/alternatives.log
+  become: yes
+  block:
+    - name: Stat /var/log/alternatives.log
+      stat:
+        path: /var/log/alternatives.log
+      register: alternatives_stat_result
+
+    - name: Set permissions on /var/log/alternatives.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/alternatives.log
+      when: alternatives_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/boot.log
+  become: yes
+  block:
+    - name: Stat /var/log/boot.log
+      stat:
+        path: /var/log/boot.log
+      register: boot_stat_result
+
+    - name: Set permissions on /var/log/boot.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/boot.log
+      when: boot_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/cloud-init-output.log
+  become: yes
+  block:
+    - name: Stat /var/log/cloud-init-output.log
+      stat:
+        path: /var/log/cloud-init-output.log
+      register: cloud_init_output_stat_result
+
+    - name: Set permissions on /var/log/cloud-init-output.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/cloud-init-output.log
+      when: cloud_init_output_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/cloud-init.log
+  become: yes
+  block:
+    - name: Stat /var/log/cloud-init.log
+      stat:
+        path: /var/log/cloud-init.log
+      register: cloud_init_stat_result
+
+    - name: Set permissions on /var/log/cloud-init.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/cloud-init.log
+      when: cloud_init_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/cron
+  become: yes
+  block:
+    - name: Stat /var/log/cron
+      stat:
+        path: /var/log/cron
+      register: cron_stat_result
+
+    - name: Set permissions on /var/log/cron
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/cron
+      when: cron_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/dnf.log
+  become: yes
+  block:
+    - name: Stat /var/log/dnf.log
+      stat:
+        path: /var/log/dnf.log
+      register: dnf_stat_result
+
+    - name: Set permissions on /var/log/dnf.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/dnf.log
+      when: dnf_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/dnf.librepo.log
+  become: yes
+  block:
+    - name: Stat /var/log/dnf.librepo.log
+      stat:
+        path: /var/log/dnf.librepo.log
+      register: dnf_librepo_stat_result
+
+    - name: Set permissions on /var/log/dnf.librepo.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/dnf.librepo.log
+      when: dnf_librepo_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/dnf.rpm.log
+  become: yes
+  block:
+    - name: Stat /var/log/dnf.rpm.log
+      stat:
+        path: /var/log/dnf.rpm.log
+      register: dnf_rpm_stat_result
+
+    - name: Set permissions on /var/log/dnf.rpm.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/dnf.rpm.log
+      when: dnf_rpm_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/dpkg.log
+  become: yes
+  block:
+    - name: Stat /var/log/dpkg.log
+      stat:
+        path: /var/log/dpkg.log
+      register: dpkg_stat_result
+
+    - name: Set permissions on /var/log/dpkg.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/dpkg.log
+      when: dpkg_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/hawkey.log
+  become: yes
+  block:
+    - name: Stat /var/log/hawkey.log
+      stat:
+        path: /var/log/hawkey.log
+      register: hawkey_stat_result
+
+    - name: Set permissions on /var/log/hawkey.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/hawkey.log
+      when: hawkey_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/ipa-custodia.audit.log
+  become: yes
+  block:
+    - name: Stat /var/log/ipa-custodia.audit.log
+      stat:
+        path: /var/log/ipa-custodia.audit.log
+      register: ipa_custodia_audit_stat_result
+
+    - name: Set permissions on /var/log/ipa-custodia.audit.log
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/ipa-custodia.audit.log
+      when: ipa_custodia_audit_stat_result.stat.exists
+  tags:
+    - logfile_perms
+
+- name: Set permissions on /var/log/README
+  become: yes
+  block:
+    - name: Stat /var/log/README
+      stat:
+        path: /var/log/README
+      register: README_stat_result
+
+    - name: Set permissions on /var/log/README
+      file:
+        group: root
+        mode: 0640
+        owner: root
+        path: /var/log/README
+      when: README_stat_result.stat.exists
+  tags:
+    - logfile_perms
