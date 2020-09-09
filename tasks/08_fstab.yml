@@ -26,13 +26,17 @@
             dest: /etc/systemd/system/tmp.mount.d/options.conf
             mode: 0644
 
+    # Note that we intentionally do not start the tmp.mount service
+    # now.  This allows Ansible to continue using /tmp for executable
+    # files while we finish building the AMI; otherwise, the final
+    # step where we remove the "admin" user from the AMI fails due to
+    # /tmp being noexec.
     - name: Enable and unmask tmp.mount
       systemd:
         daemon_reload: yes
         enabled: yes
         masked: no
         name: tmp.mount
-        state: started
   tags:
     - systemd
     - tmp
