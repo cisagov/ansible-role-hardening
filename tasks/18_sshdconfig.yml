@@ -30,7 +30,7 @@
     - { name: "LogLevel", value: "{{ sshd_log_level }}"}
     - { name: "LoginGraceTime", value: "20"}
     - { name: "MaxAuthTries", value: "{{ sshd_max_auth_tries }}"}
-    - { name: "MaxSessions", value: "10"}
+    - { name: "MaxSessions", value: "4"}
     - { name: "MaxStartups", value: "10:30:60"}
     - { name: "PermitEmptyPasswords", value: "no"}
     - { name: "PermitRootLogin", value: "no"}
