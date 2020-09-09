@@ -7,6 +7,15 @@ Requires [Ansible](https://www.ansible.com/) >= 2.8.
 
 Available on [Ansible Galaxy](https://galaxy.ansible.com/konstruktoid/hardening).
 
+## Note ##
+
+With the changes that we have made, this role is suitable for
+hardening AMIs but not live systems.  The distinction is that we do
+not ensure that all changes are immediately applied; in some cases
+(such as making /tmp noexec) we allow the changes to remain unapplied
+until the next boot so that Ansible can continue to function as
+expected.
+
 ## Distributions Tested using Vagrant
 
 ```yaml
