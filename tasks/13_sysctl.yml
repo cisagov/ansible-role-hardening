@@ -10,6 +10,24 @@
   tags:
     - sysctl
 
+- name: Ensure packet forwarding is disabled (non-Debian)
+  become: yes
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+  when:
+    # We don't want to do this for the OpenVPN (Debian) instance since
+    # it needs to forward packets to perform NATing for VPN clients.
+    - ansible_os_family != "Debian"
+  tags:
+    - sysctl
+  loop:
+    - {name: "net.ipv4.ip_forward", value: "0"}
+    - {name: "net.ipv6.conf.all.forwarding", value: "0"}
+  notify:
+    - restart sysctl
+
 - name: Ensure packet redirect sending is disabled
   become: yes
   sysctl:
