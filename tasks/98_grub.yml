@@ -2,21 +2,32 @@
 - name: Set grub config file permissions
   ansible.builtin.include_tasks: fix_grub_config_perms.yml
 
-- name: Ensure AppArmor is enabled in the bootloader configuration (Debian)
-  lineinfile:
-    regexp: '^GRUB_CMDLINE_LINUX="(.*)(?<!apparmor=1 security=apparmor)"'
-    line: 'GRUB_CMDLINE_LINUX="\1 apparmor=1 security=apparmor"'
-    dest: /etc/default/grub
-    backrefs: yes
-    state: present
-  register: grub_updated
+- name: Enable AppArmor and override Grub config permissions (Debian)
+  block:
+    - name: Ensure AppArmor is enabled in the bootloader configuration (Debian)
+      lineinfile:
+        regexp: '^GRUB_CMDLINE_LINUX="(.*)(?<!apparmor=1 security=apparmor)"'
+        line: 'GRUB_CMDLINE_LINUX="\1 apparmor=1 security=apparmor"'
+        dest: /etc/default/grub
+        backrefs: yes
+        state: present
+      notify:
+        - Update grub
+        - Set grub config file permissions
+      tags:
+        - apparmor
+        - grub
+    - name: Override grub.cfg permissions (Debian)
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/dpkg-statoverride
+          - --update
+          - --add
+          - root
+          - root
+          - 0600
+          - /boot/grub/grub.cfg
+      tags:
+        - grub
   become: yes
   when: ansible_os_family == "Debian"
-  tags:
-    - apparmor
-    - grub
-
-- name: Update grub
-  command: update-grub
-  become: yes
-  when: grub_updated["changed"]
