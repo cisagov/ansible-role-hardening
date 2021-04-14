@@ -1,58 +1,70 @@
 ---
-- name: Set grub config file permissions
+# It would be great to put this whole mess in a block and let that
+# block's become: yes and tags: grub apply to all these tasks.
+# Unfortunately that does not appear to work.  When I try that I get
+# error messages from Ansible that look like "Unexpected exception:
+# Block object has no attribute get_name".
+- name: Set permissions on /boot/grub/grub.cfg
   become: yes
   block:
+    - name: Check if /boot/grub/grub.cfg exists
+      stat:
+        path: /boot/grub/grub.cfg
+      register: grub_cfg
     - name: Set permissions on /boot/grub/grub.cfg
-      block:
-        - name: Check if /boot/grub/grub.cfg exists
-          stat:
-            path: /boot/grub/grub.cfg
-          register: grub_cfg
-        - name: Set permissions on /boot/grub/grub.cfg
-          file:
-            group: root
-            mode: 0600
-            owner: root
-            path: /boot/grub/grub.cfg
-          when: grub_cfg.stat.exists
+      file:
+        group: root
+        mode: 0600
+        owner: root
+        path: /boot/grub/grub.cfg
+      when: grub_cfg.stat.exists
+  tags:
+    - grub
+- name: Set permissions on /boot/grub/grub.conf
+  become: yes
+  block:
+    - name: Check if /boot/grub/grub.conf exists
+      stat:
+        path: /boot/grub/grub.conf
+      register: grub_conf
     - name: Set permissions on /boot/grub/grub.conf
-      block:
-        - name: Check if /boot/grub/grub.conf exists
-          stat:
-            path: /boot/grub/grub.conf
-          register: grub_conf
-        - name: Set permissions on /boot/grub/grub.conf
-          file:
-            group: root
-            mode: 0600
-            owner: root
-            path: /boot/grub/grub.conf
-          when: grub_conf.stat.exists
+      file:
+        group: root
+        mode: 0600
+        owner: root
+        path: /boot/grub/grub.conf
+      when: grub_conf.stat.exists
+  tags:
+    - grub
+- name: Set permissions on /boot/grub/menu.lst
+  become: yes
+  block:
+    - name: Check if /boot/grub/menu.lst exists
+      stat:
+        path: /boot/grub/menu.lst
+      register: menu_lst
     - name: Set permissions on /boot/grub/menu.lst
-      block:
-        - name: Check if /boot/grub/menu.lst exists
-          stat:
-            path: /boot/grub/menu.lst
-          register: menu_lst
-        - name: Set permissions on /boot/grub/menu.lst
-          file:
-            group: root
-            mode: 0600
-            owner: root
-            path: /boot/grub/menu.lst
-          when: menu_lst.stat.exists
+      file:
+        group: root
+        mode: 0600
+        owner: root
+        path: /boot/grub/menu.lst
+      when: menu_lst.stat.exists
+  tags:
+    - grub
+- name: Set permissions on /boot/grub2/grub.cfg
+  become: yes
+  block:
+    - name: Check if /boot/grub2/grub.cfg exists
+      stat:
+        path: /boot/grub2/grub.cfg
+      register: grub2_cfg
     - name: Set permissions on /boot/grub2/grub.cfg
-      block:
-        - name: Check if /boot/grub2/grub.cfg exists
-          stat:
-            path: /boot/grub2/grub.cfg
-          register: grub2_cfg
-        - name: Set permissions on /boot/grub2/grub.cfg
-          file:
-            group: root
-            mode: 0600
-            owner: root
-            path: /boot/grub2/grub.cfg
-          when: grub2_cfg.stat.exists
+      file:
+        group: root
+        mode: 0600
+        owner: root
+        path: /boot/grub2/grub.cfg
+      when: grub2_cfg.stat.exists
   tags:
     - grub

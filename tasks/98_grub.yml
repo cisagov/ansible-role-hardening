@@ -13,7 +13,7 @@
         state: present
       notify:
         - Update grub
-        - Set grub config file permissions
+        - Fix grub config file permissions
       tags:
         - apparmor
         - grub
@@ -25,7 +25,7 @@
           - --add
           - root
           - root
-          - 0600
+          - 600
           - /boot/grub/grub.cfg
       tags:
         - grub
