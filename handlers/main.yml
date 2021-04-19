@@ -99,4 +99,11 @@
   become: 'yes'
   reboot:
     pre_reboot_delay: "{{ 3600 | random(start=1) }}"
+
+- name: Update grub
+  ansible.builtin.command: update-grub
+  become: yes
+
+- name: Fix grub config file permissions
+  ansible.builtin.include_tasks: fix_grub_config_perms.yml
 ...
